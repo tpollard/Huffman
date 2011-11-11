@@ -3,6 +3,8 @@
 *       Thomas Pollard
 *       Trenton Andres
 *
+*   File: huff.c
+*
 *   Created: 11/11/2011
 *
 *   Description:
@@ -18,6 +20,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "huff.h"
 
 // Debug flag for printing intermediate results
 //#define __DEBUG__
@@ -50,7 +53,6 @@ int main(int argc, char * argv[])
         (counts[curchar])++;
     }
     
-    
     #ifdef __DEBUG__
         // print 'counts[]' for debugging purposes
         int i;
@@ -60,6 +62,8 @@ int main(int argc, char * argv[])
         }
         printf("\b\b]\n");
     #endif
+    
+    
     
     
     /* Close the input file */
