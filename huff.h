@@ -26,18 +26,22 @@
      */
     typedef struct binarynode {
         unsigned long int count;
-        char character;
+        int character;
+        int height;
         struct binarynode *left;
         struct binarynode *right;
+        struct binarynode *next;
     } Node;
     
     /* Function to create a new Node and initialize values to 0 */
-    Node* node_construct() {
-        Node * n = malloc(sizeof(node));
-        n->count = 0;
-        n->character = '\0'
+    Node* node_construct(int count, int character) {
+        Node * n = malloc(sizeof(Node));
+        n->count = count;
+        n->character = character;
+        n->height = 0;
         n->left = NULL;
         n->right = NULL;
+        n->next = NULL;
         return n;
     }
     
@@ -57,21 +61,89 @@
         Node* cur = head;
         while ((cur != NULL) && (cur->count < n->count)) {
             prev = cur;
-            cur = cur->right;
+            cur = cur->next;
         }
         // If new element is the smallest, place it at the front and return it
         if (cur == head) {
-            n->right = cur;
+            n->next = cur;
             return n;
         }
         // Otherwise, place the new element in its position and return the head
-        prev->right = n;
-        n->right = cur;
+        prev->next = n;
+        n->next = cur;
         return head;
     }
+    
+    /* Function to free a binary tree */
+    void free_tree(Node * root) {
+        if (root == NULL) {
+            return;
+        }
+        free_tree(root->right);
+        free_tree(root->left);
+        node_destruct(root);
+    }
+    
+    
             
-            
-            
+    /* Function to print a binary tree in reverese post-order */
+    void print_tree(Node * root) {
+        if (root == NULL) {
+            return;
+        }
+        print_tree(root->right);
+        
+        if (root->character == 256) {
+            printf("%lu, <EOF>, h:%d\n", root->count, root->height);
+        }
+        else {
+            printf("%lu, <%c>, h:%d\n", root->count, (char) root->character, root->height);
+        }
+        print_tree(root->left);
+    }
+    
+    /* Function to print the linked list */
+    void print_list(Node * head) {
+        if (head == NULL) {
+            return;
+        }
+        if (head->character == 256) {
+            printf("%lu, <EOF>\n", head->count);
+        }
+        else {
+            printf("%lu, <%c>\n", head->count, (char) head->character);
+        }
+        print_list(head->next);
+    }
+               
+    /* Function to print two linked lists side by side */
+    void print_two_lists(Node * list, Node * other) {
+        if (list != NULL) {
+            if (list->character == 256) {
+                printf("%3lu, <EOF>    ", list->count);
+            }
+            else {
+                printf("%3lu, <%c>      ", list->count, (char) list->character);
+            }
+            list = list->next;
+        }
+        else {
+                printf("              ");
+        }
+        if (other != NULL) {
+            if (other->character == 256) {
+                printf("%3lu, <EOF>    ", other->count);
+            }
+            else {
+                printf("%3lu, <%c>      ", other->count, (char) other->character);
+            }
+            other = other->next;
+        }
+        printf("\n");
+        if ((other != NULL) || (list != NULL)) {
+            print_two_lists(list, other);
+        }
+    }        
 
 
 #endif
