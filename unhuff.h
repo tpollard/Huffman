@@ -20,7 +20,22 @@
 #ifndef __UNHUFFH__
 #define __UNHUFFH__
 
-    
+	Node * tree(char bit, char byte, Node * curpos) {
+		/* curpos == NULL when tree is built 
+		 * byte is invalid unless bit == 1
+		 */
+		return curpos;
+	} 
+	
+	Node * tree(char bit, Node * curpos) {
+		/* curpos == NULL when tree is built 
+		 * byte is invalid unless bit == 1
+		 */
+		 
+		/* This function will print to file */
+		
+		return curpos;
+	} 
 
 
 #endif
