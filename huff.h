@@ -100,7 +100,7 @@
     	if (root->height == 0) {
     		codetable[root->character][0] = *code;
     		codetable[root->character][1] = *length;
-    		//printf("%c, %d %d\n", (char) root->character, *code, *length);
+    		printf("%c, %d %d\n", (char) root->character, *code, *length);
     		return;  	
     	}
     	
@@ -130,7 +130,7 @@
             	printf("%lu, <EOF>, h:%d\n", root->count, root->height);
         	}
         	else {
-            	printf("%lu, <%c>, h:%d\n", root->count, (char) root->character, root->height);
+            	printf("%lu, <(%d)%c>, h:%d\n", root->count, root->character, (char) root->character, root->height);
         	}
        	}
         print_tree(root->right);
