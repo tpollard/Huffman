@@ -84,22 +84,56 @@
         node_destruct(root);
     }
     
-    
+    /* Function to get the codes out of the binary tree */
+    void get_codes(Node * root, unsigned long int codetable[257][2], int * length, int * code) {
+    	
+    	/* The root should never equal null, but just in case, return to avaid a seg fault */
+    	if (root == NULL) {
+    		return;
+    	}
+    	
+    	/* If you are at a leaf node, store the node's code and the length of the code 
+    	 * The node's code is a running total of the path it takes to reach the 
+    	 * node. 0 is for left and 1 is for right. The length is equal to the depth of
+    	 * the node in the tree 
+    	 */    	
+    	if (root->height == 0) {
+    		codetable[root->character][0] = *code;
+    		codetable[root->character][1] = *length;
+    		//printf("%c, %d %d\n", (char) root->character, *code, *length);
+    		return;  	
+    	}
+    	
+    	/* If you are not at a leaf, increase the length and go down a level to the left */
+    	(*length)++;
+    	/* Shift the code left 1 bit (zero fill) to account for the next node's code */
+    	*code = (*code)<<1;
+    	get_codes(root->left, codetable, length, code);
+    	
+    	/* Add 1 to the code to establish that the next node is to the right */
+    	(*code)++;
+    	get_codes(root->right, codetable, length, code);
+    	
+    	/* Decrease the length and shift the code right 1 bit to return up to the parent */
+    	(*length)--;
+    	*code = (*code)>>1; 
+    }
             
-    /* Function to print a binary tree in reverese post-order */
+    /* Function to print a binary tree in-order */
     void print_tree(Node * root) {
         if (root == NULL) {
             return;
         }
-        print_tree(root->right);
-        
-        if (root->character == 256) {
-            printf("%lu, <EOF>, h:%d\n", root->count, root->height);
-        }
-        else {
-            printf("%lu, <%c>, h:%d\n", root->count, (char) root->character, root->height);
-        }
         print_tree(root->left);
+        if (root->height == 0) {
+        	if (root->character == 256) {
+            	printf("%lu, <EOF>, h:%d\n", root->count, root->height);
+        	}
+        	else {
+            	printf("%lu, <%c>, h:%d\n", root->count, (char) root->character, root->height);
+        	}
+       	}
+        print_tree(root->right);
     }
     
     /* Function to print the linked list */

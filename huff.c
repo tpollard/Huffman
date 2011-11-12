@@ -27,6 +27,7 @@
 //#define __DEBUGLIST__
 //#define __DEBUGLISTTOTREE__
 //#define __DEBUGTREE__
+//#define __DEBUGCODES__
 
 
 int main(int argc, char * argv[])
@@ -49,12 +50,12 @@ int main(int argc, char * argv[])
      * Character counts are stored in 'counts[]' array. Index is (int) 'char',
      * length of counts[] = 256 (one entry for each char)
      */
-    unsigned long int * counts = malloc(sizeof(long) * 256);
-    // Initialize memory to all 0's
-    memset(counts, (unsigned long int) 0, sizeof(counts));      
+    unsigned long int counts[257][2] = {{0,0}};
+    
+    // Initialize memory to all 0's   
     int curchar = 0;
     while ((curchar = fgetc(fhd)) != EOF) {
-        (counts[curchar])++;
+        (counts[curchar][0])++;
     }
     
     #ifdef __DEBUGCOUNT__
@@ -63,7 +64,7 @@ int main(int argc, char * argv[])
             int i = 0;
             printf("counts[]:\n[");
             for (i = 0; i < 256; i++) {
-                printf("%lu, ", counts[i]);
+                printf("%lu, ", counts[i][0]);
             }
             printf("\b\b]\n");
         }
@@ -79,13 +80,11 @@ int main(int argc, char * argv[])
     // a smaller (int) representation will be inserted into the list later, 
     // so it will appear earlier in the final list
     for (i = 255; i >= 0; i--) {
-        if (counts[i] != 0) {
+        if (counts[i][0] != 0) {
             /* Create new node and insertion sort into list */
-            list = insert_node(list, node_construct(counts[i], i));
+            list = insert_node(list, node_construct(counts[i][0], i));
         }
     }
-    /* Deallocate the memory for counts[] */
-    free(counts);
     
     /* Add psuedo-EOF character as first element. 
      * The psuedo EOF character is d256, and it's count is 1
@@ -119,7 +118,7 @@ int main(int argc, char * argv[])
             /* Print list for debugging purposes */
             printf("List:\n");
             print_two_lists(list,otherlist);
-            printf("\n");
+            printf("\n"*code = );
             getchar();
         #endif
         
@@ -182,7 +181,7 @@ int main(int argc, char * argv[])
         // If you didn't reach the end case...
         if (done == 0) {
             // Join the two nodes
-            tempparent = node_construct((first->count)+(second->count), '!');
+            tempparent = node_construct((first->count)+(second->count), '\0');
             // Place the bigger tree (larger height) on the right
             if (first->height >= second->height) {
                 tempparent->right = first;
@@ -197,8 +196,8 @@ int main(int argc, char * argv[])
                 tempparent->height = second->height + 1;
             }
             // Remove invalid references
-            first->next = NULL;
-            second->next = NULL;
+            first->next = tempparent;
+            second->next = tempparent;
             // Push the new parent into the second list using tail
             if (otherlist == NULL) {
                 tail = tempparent;
@@ -213,13 +212,47 @@ int main(int argc, char * argv[])
     
     // Store the root node
     Node * codetree = first;
-    
+   	
     #ifdef __DEBUGTREE__
         /* Print tree for debugging */
         printf("Code tree:\n");
         print_tree(codetree);
         printf("\n");
     #endif
+    
+    
+    int length = 0;
+    int code = 0;
+   	// Store code values in the codetable array
+   	get_codes(codetree, counts, &length, &code);
+   	
+   	#ifdef __DEBUGCODES__
+        // print 'codetable[][]' for debugging purposes
+        {
+            int i = 0;
+            printf("codes[]:\n");
+            for (i = 0; i < 256; i++) {
+                printf("%lu, %lu\n", counts[i][0], counts[i][1]);
+            }
+        }
+    #endif
+   	
+    
+    
+    
+    
+    /*************************************************
+     * counts[char][0] = code, counts[char][1] = bit length of code
+     */
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     /* Free codetree */
