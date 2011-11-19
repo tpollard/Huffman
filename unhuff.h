@@ -126,7 +126,6 @@
 		    if (curpos->character == 256) {
 		        return NULL;
 		    }
-		    
 		    fprintf(ofhd, "%c", (char) curpos->character);
 		    return head;
 		}

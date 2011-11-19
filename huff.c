@@ -26,7 +26,7 @@
 //#define __DEBUGCOUNT__
 //#define __DEBUGLIST__
 //#define __DEBUGLISTTOTREE__
-#define __DEBUGTREE__
+//#define __DEBUGTREE__
 //#define __DEBUGCODES__
 
 
