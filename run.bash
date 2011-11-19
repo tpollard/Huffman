@@ -19,14 +19,20 @@ then
 fi
 echo "    unhuff.c compiled without errors."
 echo
-echo "Running ./huff Samples/triv.txt"
-./huff Samples/triv.txt > hout
-echo
-echo "Running ./unhuff Samples/triv.txt.huff"
-./unhuff Samples/triv.txt.huff > uout
-echo
-echo "diff hout uout:"
-diff -a hout uout
-echo
-echo "diff Samples/triv.txt Samples/triv.txt.huff.unhuff"
-diff -a Samples/triv.txt Samples/triv.txt.huff.unhuff
+
+for i in small1.txt small2.txt medium1.txt medium2.txt big1.txt big2.txt
+do
+    echo "Running ./huff Samples/$i"
+    time ./huff Samples/$i > hout
+    echo
+    echo "Running ./unhuff Samples/$i.huff"
+    time ./unhuff Samples/$i.huff > uout
+    echo
+    echo "diff Samples/$i Samples/$i.huff.unhuff"
+    diff -a Samples/$i Samples/$i.huff.unhuff
+    echo
+done
+
+
+
+
