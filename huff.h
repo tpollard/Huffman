@@ -100,7 +100,7 @@
     	if (root->height == 0) {
     		codetable[root->character][0] = *code;
     		codetable[root->character][1] = *length;
-    		printf("%c, %d %d\n", (char) root->character, *code, *length);
+    		//printf("%c, %d %d\n", (char) root->character, *code, *length);
     		return;  	
     	}
     	
@@ -118,6 +118,36 @@
     	(*length)--;
     	*code = (*code)>>1; 
     }
+    
+    /* Function to print the code tree into the header of the file.
+     * This prints the tree in a pre-order fashion 
+     */
+    void print_header(FILE * ofhd, Node * root) {
+        
+        if (root == NULL) {
+            return;
+        }
+        
+
+        /* If root is not a leaf node, print a 0, else print 1 and the char */
+        if ((root->left == NULL) && (root->right == NULL)) {
+            fprintf(ofhd, "1");
+            if (root->character != 256) {
+                fprintf(ofhd, "%c", root->character);
+            }
+            else {
+                fprintf(ofhd, "%c", (char) 255);
+                fprintf(ofhd, "0");
+            }
+        }
+        else {
+            fprintf(ofhd, "0");
+        }
+        
+        print_header(ofhd, root->left);
+        print_header(ofhd, root->right);
+    
+    }
             
     /* Function to print a binary tree in-order */
     void print_tree(Node * root) {
@@ -125,12 +155,13 @@
             return;
         }
         print_tree(root->left);
-        if (root->height == 0) {
+        if ((root->left == NULL) && (root->right == NULL)) {
+            unsigned long int count = 0;
         	if (root->character == 256) {
-            	printf("%lu, <EOF>, h:%d\n", root->count, root->height);
+            	printf("%lu, <EOF>, h:%d\n", /*root->*/count, root->height);
         	}
         	else {
-            	printf("%lu, <(%d)%c>, h:%d\n", root->count, root->character, (char) root->character, root->height);
+            	printf("%lu, <(%d)%c>, h:%d\n", /*root->*/count, root->character, (char) root->character, root->height);
         	}
        	}
         print_tree(root->right);

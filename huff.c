@@ -26,7 +26,7 @@
 //#define __DEBUGCOUNT__
 //#define __DEBUGLIST__
 //#define __DEBUGLISTTOTREE__
-//#define __DEBUGTREE__
+#define __DEBUGTREE__
 //#define __DEBUGCODES__
 
 
@@ -237,8 +237,14 @@ int main(int argc, char * argv[])
         }
     #endif
    	
+   	/* Open output file */
+   	FILE * ofhd = fopen("Samples/triv.txt.huff", "w");
     
+    /* Print the tree into the header of the output file */
+    print_header(ofhd, codetree);
     
+    /* Destroy the tree */
+    free_tree(codetree);
     
     
     /*************************************************
@@ -255,11 +261,13 @@ int main(int argc, char * argv[])
     
     
     
-    /* Free codetree */
-    free_tree(codetree);
+    
     
     /* Close the input file */
     fclose(fhd);
+    
+    /* Close the output file */
+    fclose(ofhd);
     
     
     return 0;

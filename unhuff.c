@@ -24,8 +24,12 @@
 #include "unhuff.h"
 
 // Debug flags for printing intermediate results
+#define __DEBUGTREE__
 
 
+// Global variable declarations
+FILE * ofhd;
+Node * head;
 
 int main(int argc, char * argv[])
 {
@@ -35,7 +39,7 @@ int main(int argc, char * argv[])
         return -1;
     }
     /* Open file as "binary, readonly" */
-    FILE* fhd = fopen(argv[1], "rb");
+    FILE * fhd = fopen(argv[1], "rb");
         
     /*Ensure the file can be opened */
     if (fhd == NULL) {
@@ -43,7 +47,105 @@ int main(int argc, char * argv[])
         return -1;
     }
     
+    head = NULL;
+    Node * curpos = NULL;
+    //char bit;
+    //char byte;
     
+    curpos = tree(0, 0, curpos);
+    curpos = tree(0, 0, curpos);
+    curpos = tree(1, 'o', curpos);
+    curpos = tree(0, 0, curpos);
+    curpos = tree(1, ' ', curpos);
+    curpos = tree(1, 's', curpos);
+    curpos = tree(0, 0, curpos);
+    curpos = tree(0, 0, curpos);
+    curpos = tree(1, 'g', curpos);
+    curpos = tree(0, 0, curpos);
+    curpos = tree(1, 'r', curpos);
+    curpos = tree(1, 'p', curpos);
+    curpos = tree(0, 0, curpos);
+    curpos = tree(0, 0, curpos);
+    curpos = tree(1, 'h', curpos);
+    curpos = tree(1, 'e', curpos);
+    curpos = tree(0, 0, curpos);
+    curpos = tree(1, 10, curpos);
+    curpos = tree(1, 255, curpos);
+    curpos = tree(0, 0, curpos);
+    
+   
+    
+    #ifdef __DEBUGTREE__
+        /* Print tree for debugging */
+        printf("Code tree:\n");
+        print_tree(head);
+        printf("\n");
+    #endif
+    
+    ofhd = fopen("Samples/triv.txt.huff.unhuff", "w");
+    curpos = head;
+    curpos = tree2(1, curpos);
+    curpos = tree2(0, curpos);
+    curpos = tree2(0, curpos);
+    
+    curpos = tree2(0, curpos);
+    curpos = tree2(0, curpos);
+    
+    curpos = tree2(0, curpos);
+    curpos = tree2(1, curpos);
+    curpos = tree2(0, curpos);
+    
+    curpos = tree2(1, curpos);
+    curpos = tree2(0, curpos);
+    curpos = tree2(0, curpos);
+    
+    curpos = tree2(0, curpos);
+    curpos = tree2(0, curpos);
+    
+    curpos = tree2(0, curpos);
+    curpos = tree2(1, curpos);
+    curpos = tree2(0, curpos);
+    
+    curpos = tree2(1, curpos);
+    curpos = tree2(0, curpos);
+    curpos = tree2(0, curpos);
+    
+    curpos = tree2(0, curpos);
+    curpos = tree2(0, curpos);
+    
+    curpos = tree2(1, curpos);
+    curpos = tree2(0, curpos);
+    curpos = tree2(1, curpos);
+    curpos = tree2(1, curpos);
+    
+    curpos = tree2(1, curpos);
+    curpos = tree2(1, curpos);
+    curpos = tree2(0, curpos);
+    curpos = tree2(0, curpos);
+    
+    curpos = tree2(1, curpos);
+    curpos = tree2(1, curpos);
+    curpos = tree2(0, curpos);
+    curpos = tree2(1, curpos);
+    
+    curpos = tree2(1, curpos);
+    curpos = tree2(0, curpos);
+    curpos = tree2(1, curpos);
+    curpos = tree2(0, curpos);
+    
+    curpos = tree2(0, curpos);
+    curpos = tree2(1, curpos);
+    curpos = tree2(1, curpos);
+    
+    curpos = tree2(1, curpos);
+    curpos = tree2(1, curpos);
+    curpos = tree2(1, curpos);
+    curpos = tree2(0, curpos);
+    
+    curpos = tree2(1, curpos);
+    curpos = tree2(1, curpos);
+    curpos = tree2(1, curpos);
+    curpos = tree2(1, curpos);
     
     
     

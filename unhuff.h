@@ -22,8 +22,8 @@
 
 #include "huff.h"
 
-    global Node * head;
-    global FILE * fhd;
+    Node * head;
+    FILE * ofhd;
     
     /* This function builds the binary Huffman Coding tree */
 	Node * tree(char bit, char byte, Node * curpos) {
@@ -31,13 +31,31 @@
 		 * byte is invalid unless bit == 1
 		 */
 		 
-		 /* When the tree is complete, curpos will point to NULL, so return */
-		 if (curpos == NULL) {
+		/* If head == NULL, then create the head node */
+		if (head == NULL) {
+		    if (bit == 0) {
+		        head = node_construct(0, 0);
+		        return head;
+		    }
+		    else {
+		        head = node_construct(0, byte);
+		        return  NULL;
+		    }
+		}
+                   
+		/* When the tree is complete, curpos will point to NULL, so return */
+		if (curpos == NULL) {
+		    /* Find EOF and change value to 256 */
+		    Node * n = head;
+		    while (n->right != NULL) {
+		        n = n->right;
+		    }
+		    n->character = 256;
 		    return NULL;
-		 }
+		}
 		 
-		 /* If the bit that was read is a zero, */
-		 if (bit == 0) {
+		/* If the bit that was read is a zero, */
+		if (bit == 0) {
 		    /* Try to make a new child on the left */
 		    if (curpos->left == NULL) {
 		        Node * n = node_construct(0,0);
@@ -91,8 +109,29 @@
 	 */
 	Node * tree2(char bit, Node * curpos) {
 		
+		if (curpos == NULL) {
+		    return NULL;
+		    
+		}
+		
+		if (bit == 1) {
+		    curpos = curpos->right;
+		}
+		else if (bit == 0) {
+		    curpos = curpos->left;
+		}
+		
+		/* Check to see if you are at a leaf node */
+		if ((curpos->right == NULL) && (curpos->left == NULL)) {
+		    if (curpos->character == 256) {
+		        return NULL;
+		    }
+		    
+		    fprintf(ofhd, "%c", (char) curpos->character);
+		    return head;
+		}
 		 
-		/* This function will print to file */
+		
 		
 		return curpos;
 	} 
