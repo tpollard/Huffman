@@ -146,6 +146,10 @@
         
         print_header(ofhd, root->left);
         print_header(ofhd, root->right);
+        
+		/* Once all childern have been process, delete the node */
+        node_destruct(root);
+        root = NULL;
     
     }
             

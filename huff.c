@@ -240,11 +240,10 @@ int main(int argc, char * argv[])
    	/* Open output file */
    	FILE * ofhd = fopen("Samples/triv.txt.huff", "w");
     
-    /* Print the tree into the header of the output file */
+    /* Print the tree into the header of the output file (also deletes tree */
     print_header(ofhd, codetree);
     
-    /* Destroy the tree */
-    free_tree(codetree);
+
     
     
     /*************************************************
