@@ -220,7 +220,8 @@ int main(int argc, char * argv[])
         printf("\n");
     #endif
     
-
+    
+    
     unsigned long int code_length = 0;
     unsigned long int code = 0;
     // using unsigned long to cut down on number of writes
@@ -289,6 +290,7 @@ int main(int argc, char * argv[])
 		        		print_binary(0,code,code_length);
                         printf(" brem: %d\n",bits_remaining);
                     #endif
+
                 } 
                 else if(code_length >= bits_remaining) {
                     //Can get nasty; have to overflow into next output

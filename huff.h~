@@ -116,8 +116,8 @@
             //Can get nasty; have to overflow into next output
             *output = (*output << *bits_remaining)|(input>>(length - *bits_remaining));
             fwrite(output,sizeof(char),8,wfp);
-            //printf("\nWrote:  ");
-            //print_binary(1,*output,(sizeof(unsigned long)*8));
+            printf("\nWrote:  ");
+            print_binary(1,*output,(sizeof(unsigned long)*8));
             *output = input; //bits already written out will be shifted away
             *bits_remaining = sizeof(unsigned long)*8 - (length - *bits_remaining);
         }
