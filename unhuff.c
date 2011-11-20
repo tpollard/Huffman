@@ -49,33 +49,59 @@ int main(int argc, char * argv[])
     
     head = NULL;
     Node * curpos = NULL;
-    //char bit;
-    //char byte;
+
+    do{
+	if(bits_remaining == 0) {
+		
+		read_result = fread(&ibuff, sizeof(unsigned long), 1, fhd);
+		bits_remaining = sizeof(unsigned long)*8;
+	}
+	
+	mybit = (ibuff >> (--bits_remaining)) & 0x0000000000000001;
+	
+	if(mybit) {
+
+		if(bits_remaining > 8) {
+			mybyte = (ibuff >> (bits_remaining - 8)) & 0x00000000000000FF;
+			bits_remaining -= 8;
+			
+		} else {
+			mybyte = (ibuff << (8-bits_remaining)) & 0x00000000000000FF;
+			read_result = fread(&ibuff, sizeof(unsigned long), 1, fhd);
+			mybyte = mybyte | ((ibuff >> (sizeof(unsigned long)*8 - 8 + bits_remaining)) & 0x00000000000000FF);
+			bits_remaining = sizeof(unsigned long)*8 - (8-bits_remaining);
+		} 
+	}
+
+
+    } while(curpos != NULL);
     
-    curpos = tree(0, 0, curpos);
+    /*  - Read the file into a buffer, stop when fread no longer returns
+     *  	* Go through buffer
+     *			-break bytes into bits, turning over true/false to code inside
+     */
+
+
+    do{
+        if(bits_remaining == 0){
+		read_result = fread(&ibuff, sizeof(unsigned long), 1, fhd);
+		bits_remaining = sizeof(unsigned long)*8;
+		if(read_result < 1) {
+			printf("\n**ERROR:END OF FILE**\n");
+			return 0;
+		}
+	}
+        mybit = (ibuff >> (--bits_remaining)) & 0x0000000000000001;
+
+    } while (curpos != NULL);
     
-    
-   
-    
-    #ifdef __DEBUGTREE__
-        /* Print tree for debugging */
-        printf("Code tree:\n");
-        print_tree(head);
-        printf("\n");
-    #endif
-    
-    ofhd = fopen("Samples/triv.txt.huff.unhuff", "w");
-    curpos = head;
-    curpos = tree2(1, curpos);
-    
-    
-    
+    /* Delete the tree */
+    free_tree(head);
     
     /* Close the input file */
     fclose(fhd);
-    
+    //printf("\n");
     return 0;
 }
-    
 
 

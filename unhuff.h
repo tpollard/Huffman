@@ -135,5 +135,27 @@
 		return curpos;
 	} 
 
+	/* Function to append the '.unhuff' to the end of an arbitrarily named file, returns pointer to string */
+    char *unhuff_output_filename(char *filename){
+        int i = 0;
+        char *newname;
+        while(*(filename+i) != '\0') i++;
+        newname = malloc(sizeof(char)*(i+8));
+        i = 0;
+        while(*(filename + i) != '\0') {
+          *(newname+i) = *(filename + i);
+          i++;
+        }
+        *(newname+i++) = '.';
+        *(newname+i++) = 'u';
+        *(newname+i++) = 'n';
+        *(newname+i++) = 'h';
+        *(newname+i++) = 'u';
+        *(newname+i++) = 'f';
+        *(newname+i++) = 'f';
+        *(newname+i) = '\0';
+        return(newname);
+    }
+
 
 #endif

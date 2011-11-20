@@ -313,11 +313,15 @@ int main(int argc, char * argv[])
             }
             result = fread(cbuff, sizeof(char), 256, fhd);
         }
+        if (bits_remaining != sizeof(unsigned long)*8) {
+        	output = output << (64-bits_remaining);
+        	fwrite(&output, sizeof(output), 1, wfp);
+       	}
     }   
     else {
       printf("Failed to open output file\n");
     }
-
+	
 
     /* Close the input and output files */
     fclose(fhd);

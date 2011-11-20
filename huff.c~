@@ -220,8 +220,7 @@ int main(int argc, char * argv[])
         printf("\n");
     #endif
     
-    
-    
+
     unsigned long int code_length = 0;
     unsigned long int code = 0;
     // using unsigned long to cut down on number of writes
@@ -290,7 +289,6 @@ int main(int argc, char * argv[])
 		        		print_binary(0,code,code_length);
                         printf(" brem: %d\n",bits_remaining);
                     #endif
-
                 } 
                 else if(code_length >= bits_remaining) {
                     //Can get nasty; have to overflow into next output
@@ -315,11 +313,15 @@ int main(int argc, char * argv[])
             }
             result = fread(cbuff, sizeof(char), 256, fhd);
         }
+        if (bits_remaining != sizeof(unsigned long)*8) {
+        	output = output << (64-bits_remaining);
+        	fwrite(&output, sizeof(output), 1, wfp);
+       	}
     }   
     else {
       printf("Failed to open output file\n");
     }
-
+	
 
     /* Close the input and output files */
     fclose(fhd);
