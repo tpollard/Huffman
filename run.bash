@@ -20,16 +20,17 @@ fi
 echo "    unhuff.c compiled without errors."
 echo
 
-for i in small1.txt small2.txt medium1.txt medium2.txt big1.txt big2.txt
+for i in small1.txt small2.txt medium1.txt medium2.txt big1.txt big2.txt binary bhuff
 do
     echo "Running ./huff Samples/$i"
-    time ./huff Samples/$i > hout
-    echo
+    time ./huff Samples/$i
+    #echo
     echo "Running ./unhuff Samples/$i.huff"
-    time ./unhuff Samples/$i.huff > uout
-    echo
-    echo "diff Samples/$i Samples/$i.huff.unhuff"
+    time ./unhuff Samples/$i.huff
+    #echo
     diff -a Samples/$i Samples/$i.huff.unhuff
+    wc -c Samples/$i
+    wc -c Samples/$i.huff
     echo
 done
 

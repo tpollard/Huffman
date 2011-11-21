@@ -26,7 +26,7 @@
     FILE * ofhd;
     
     /* This function builds the binary Huffman Coding tree */
-	Node * tree(char bit, char byte, Node * curpos) {
+	Node * tree(unsigned char bit, unsigned char byte, Node * curpos) {
 		/* curpos == NULL when tree is finished being built (initially == head)
 		 * byte is invalid unless bit == 1
 		 */
@@ -107,7 +107,7 @@
 	/* This function traverses the binary tree and prints a character in the
 	 * output file when it reaches a leaf node
 	 */
-	Node * tree2(char bit, Node * curpos) {
+	Node * tree2(unsigned char bit, Node * curpos) {
 		
 		if (curpos == NULL) {
 		    return NULL;
@@ -126,7 +126,9 @@
 		    if (curpos->character == 256) {
 		        return NULL;
 		    }
-		    fprintf(ofhd, "%c", (char) curpos->character);
+		    unsigned char temp = (unsigned char) curpos->character;
+		    //Write the character
+		    fwrite(&temp, sizeof(unsigned char), 1, ofhd);
 		    return head;
 		}
 		 
@@ -139,13 +141,16 @@
     char *unhuff_output_filename(char *filename){
         int i = 0;
         char *newname;
-        while(*(filename+i) != '\0') i++;
-        newname = malloc(sizeof(char)*(i+8));
+        while(*(filename+i) != '\0') i++; //count the size of the string
+        newname = malloc(sizeof(char)*(i+8)); // get a new memory space for string
         i = 0;
+        //copy string
         while(*(filename + i) != '\0') {
           *(newname+i) = *(filename + i);
           i++;
         }
+        //Append ".unhuff" now that we know the length and have a big enough
+        //memory space
         *(newname+i++) = '.';
         *(newname+i++) = 'u';
         *(newname+i++) = 'n';

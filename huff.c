@@ -56,7 +56,7 @@ int main(int argc, char * argv[])
     
     // Initialize memory to all 0's   
     int curchar = 0;
-    while ((curchar = fgetc(fhd)) != EOF) {
+    while ((fread(&curchar, 1, 1, fhd)) > 0) {
         (counts[curchar][0])++;
     }
     
@@ -222,13 +222,16 @@ int main(int argc, char * argv[])
     
 
     unsigned long int code_length = 0;
-    unsigned long int code = 0;
+    unsigned long int code = 0xBADFACE000ECE368;//our secret code
     // using unsigned long to cut down on number of writes
     unsigned long int output = 0;
     int bits_remaining = sizeof(output) *8;
     // Attempt to open/create the file with .huff appended
     char * outname = huff_output_filename(argv[1]);
     FILE *wfp = fopen(outname,"wb");
+
+    fwrite(&code,sizeof(unsigned long), 1, wfp);
+	code = 0;
     free(outname);
    	// Store code values in the codetable array
    	get_codes(codetree, counts, &code_length, &code);
@@ -258,7 +261,7 @@ int main(int argc, char * argv[])
      * 
      */
     // We need a reasonably sized character buffer for reading
-    char cbuff[256];
+    unsigned char cbuff[256];
 
     int result;
     // We have to start the file over
@@ -271,8 +274,8 @@ int main(int argc, char * argv[])
             i = 0;
             while( i < result) {
                 // use character as index, find code and length
-                code_length = counts[(int)cbuff[i]][1];
-                code = counts[(int)cbuff[i]][0];
+                code_length = counts[(unsigned int)cbuff[i]][1];
+                code = counts[(unsigned int)cbuff[i]][0];
                 /* we have to keep track of how man bits are left
                    to fill each write to maximum. Packing operation:
                    1) Check size constraints
@@ -280,7 +283,7 @@ int main(int argc, char * argv[])
                    3) write output and zero it
                    4) shift in any remainder */
                 if(code_length < bits_remaining) {
-                    //no problem just pack em in
+                    //We still have enough bits left over to store code in buffer
                     output = (output << code_length)|code;
                     bits_remaining -= code_length;
 		    		#ifdef __DEBUGPACK__
@@ -299,8 +302,9 @@ int main(int argc, char * argv[])
 		        		print_binary(0,code,code_length);
                         printf(" brem: %d\n",bits_remaining);
             		#endif
+            		//write out the buffer
                     fwrite(&output,sizeof(output),1,wfp);
-                    output = code; //bits already written out will be shifted away
+                    output = code; //bits already written out will be shifted away later
                     bits_remaining = sizeof(output)*8 - (code_length - bits_remaining);
 		    		#ifdef __DEBUGPACK__
 		        		print_binary(1,output,64-bits_remaining);
@@ -309,12 +313,29 @@ int main(int argc, char * argv[])
                         printf(" brem: %d\n",bits_remaining);
                     #endif
                 }
-                i++;
+                i++;//next char
             }
+            //refill buffer
             result = fread(cbuff, sizeof(char), 256, fhd);
         }
+        
+        // Add EOF character to buffer
+        code_length = counts[256][1];
+        code = counts[256][0];
+        if(code_length < bits_remaining) {
+                    //no problem just pack em in
+                    output = (output << code_length)|code;
+                    bits_remaining -= code_length;
+        } 
+        else if(code_length >= bits_remaining) {
+                    //Can get nasty; have to overflow into next output
+                    output = (output << bits_remaining)|(code>>(code_length - bits_remaining));
+                    fwrite(&output,sizeof(output),1,wfp);
+                    output = code; //bits already written out will be shifted away
+                    bits_remaining = sizeof(output)*8 - (code_length - bits_remaining);
+        }
         if (bits_remaining != sizeof(unsigned long)*8) {
-        	output = output << (64-bits_remaining);
+        	output = output << (bits_remaining);
         	fwrite(&output, sizeof(output), 1, wfp);
        	}
     }   

@@ -26,7 +26,7 @@
      */
     typedef struct binarynode {
         unsigned long int count;
-        int character;
+        unsigned int character;
         int height;
         struct binarynode *left;
         struct binarynode *right;
@@ -34,7 +34,7 @@
     } Node;
     
     /* Function to create a new Node and initialize values to 0 */
-    Node* node_construct(int count, int character) {
+    Node* node_construct(int count, unsigned int character) {
         Node * n = malloc(sizeof(Node));
         n->count = count;
         n->character = character;
@@ -118,6 +118,7 @@
             fwrite(output,sizeof(char),8,wfp);
             //printf("\nWrote:  ");
             //print_binary(1,*output,(sizeof(unsigned long)*8));
+            //printf("/n");
             *output = input; //bits already written out will be shifted away
             *bits_remaining = sizeof(unsigned long)*8 - (length - *bits_remaining);
         }
@@ -177,6 +178,7 @@
             pack(wfp, bits_remaining, output, 1, 1);
             if (root->character != 256) {
                 pack(wfp, bits_remaining, output, root->character, 8);
+                //printf("%c\n", (char) root->character);
             }
             else {
                 pack(wfp, bits_remaining, output, 255, 8);
